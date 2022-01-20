@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+  # Create frontend container
+  frontend:
+    build: ./client
+    ports:
+      - 3000:3000
+    container_name: frontend-docker
+    restart: always
+    links:
+      - backend
+  # Create backend container
+  backend:
+    build: ./server
+    ports:
+      - 5000:5000
+    container_name: backend-docker
+    restart: always
+    links:
+      - postgres
+  # Postgres container
+  postgres:
+    container_name: postgres-docker
+    image: postgres:14
+    environment:
+      PG_DATA: /var/lib/postgresql/data
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Init1
+      POSTGRES_DB: santa
+    ports:
+      - 5432:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: always
+
+volumes:
+  pgdata:
